@@ -1,6 +1,6 @@
 ## Intro
 
-This is the source code for our Youtube Series: [Laravel API Server from scratch](https://www.youtube.com/playlist?list=PLSfH3ojgWsQosqpQUc28yP9jJZXrEylJY)
+This is the source code for our course: [Introduction to PWA](https://www.acadea.io/learn/pwa-intro)
 
 ## Support us
 
