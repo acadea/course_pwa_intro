@@ -115,13 +115,32 @@
   <script>
     
 
-    const worker = new Worker('worker/tictactoe.js', {
-      // credentials: "include", // always send auth header and cookies
-      credentials: "omit", // never send or receive cookies 
-      // credentials: "same-origin", // only if url is the same origin as the calling script
-      name: "tictactoe",
-      type: "classic"
+    // const worker = new Worker('worker/tictactoe.js', {
+    //   // credentials: "include", // always send auth header and cookies
+    //   credentials: "omit", // never send or receive cookies 
+    //   // credentials: "same-origin", // only if url is the same origin as the calling script
+    //   name: "tictactoe",
+    //   type: "classic"
+    // });
+
+    const shared = new SharedWorker('worker/tictactoe_shared.js', {
+      credentials: 'omit',
+      name: 'tictactoe',
+      type: 'classic'
     });
+
+    const worker = shared.port;
+
+    // worker.start();
+    // worker.addEventListener('message', () => {
+    //   // ... 
+    // })
+
+    window.addEventListener('beforeunload', (e) => {
+      worker.postMessage({type: 'closing'});
+    });
+
+    
 
     worker.onmessage = function(e){
 
