@@ -1,0 +1,18 @@
+{
+  "name": "workbox-demo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^4.3.2"
+  },
+  "dependencies": {
+    "vite-plugin-pwa": "^0.14.7",
+    "workbox-build": "^6.5.4"
+  }
+}
