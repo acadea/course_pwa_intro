@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
-import { generateSW } from "workbox-build";
+import { generateSW, injectManifest } from "workbox-build";
 
 
 
@@ -10,7 +10,15 @@ import { generateSW } from "workbox-build";
 export default defineConfig({
   plugins: [
     VitePWA({
-      injectRegister: 'script'
+      injectRegister: 'script',
+      strategies: 'injectManifest',
+      srcDir: '/',
+      filename: 'sw.js',
+      devOptions: {
+        enabled: true,
+        type: 'module',
+      }
+
     })
   ],
   build: {
@@ -20,14 +28,29 @@ export default defineConfig({
     rollupOptions: {
       plugins: [
         // {
-        //   async generateBundle(){
-        //     generateSW({
-        //       globDirectory: 'dist/',
-        //       globPatterns: [
-        //         '**/*.{css,woff2,png,svg,jpg,js}'
-        //       ],
-        //       swDest: 'dist/sw.js',
-        //     })
+        //   async writeBundle(){
+        //     // generateSW({
+        //     //   globDirectory: 'dist/',
+        //     //   globPatterns: [
+        //     //     '**/*.{css,woff2,png,svg,jpg,js}'
+        //     //   ],
+        //     //   swDest: 'dist/sw.js',
+        //     // })
+
+        //     // injectManifest({
+        //     //   swSrc: 'sw.js',
+        //     //   swDest: 'dist/sw.js',
+        //     //   globDirectory: './dist',
+        //     //   globPatterns: [
+        //     //     '**/*.js',
+        //     //     '**/*.css',
+        //     //     '**/*.svg'
+        //     //   ]
+        //     // }).then((res) => {
+        //     //   console.log('res is ', res);
+        //     // }).catch((err) => {
+        //     //   console.log('err is', err);
+        //     // })
         //   }
         // }
       ]
