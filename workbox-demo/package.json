@@ -6,12 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pwa-icon": "pwa-assets-generator --preset minimal public/vite.svg"
   },
   "devDependencies": {
     "vite": "^4.3.2"
   },
   "dependencies": {
+    "@vite-pwa/assets-generator": "^0.0.3",
     "vite-plugin-pwa": "^0.14.7",
     "workbox-build": "^6.5.4"
   }

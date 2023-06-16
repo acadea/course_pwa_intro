@@ -43,6 +43,73 @@ export default defineConfig({
       },
       disable: false,
 
+
+      manifest: {
+        name: 'My PWAA App',
+        short_name: "PWA App",
+
+        // "fullscreen", -- hide the status bar (eg battery percentage, etc )
+        // "standalone", -- no navigation but will still show device status bar
+        // "minimal-ui", -- will show minimal ui of the browser,
+        // "browser" -- display standard browser
+        display: 'standalone',
+
+        description: "What an amazing app!!",
+
+        // The color used for the address bar, task switcher, or splash screen.
+        theme_color: '#FFFFFF',
+
+
+        // 192x192 pixels: Used for most Android devices and the home screen icon on Chrome for Android.
+        // 512x512 pixels: Used as a high- resolution icon on some Android devices and the Microsoft Store.
+        // 180x180 pixels: Used for Apple devices running iOS 7 and later versions, including iPhones and iPads.
+        // 152x152 pixels: Used for Apple devices running iOS 6 and earlier versions.
+        // 144x144 pixels: Used for Windows 8.1 devices.
+        // 128x128 pixels: Used for Chrome Web Store icons.
+        // 96x96 pixels: Used for some Android devices and older Chrome versions.
+        // 48x48 pixels: Used for Chrome's extension toolbar icons.
+        icons: [
+          {
+            src: 'pwa-64x64.png',
+            sizes: '64x64',
+            type: 'image/png'
+          },
+          {
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'maskable-icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
+          }
+        ],
+        start_url: '/',
+
+        background_color: '#ffffff',
+
+        categories: ['lifestyle'],
+
+        orientation: 'any',
+
+
+      },
+      // add the `crossorigin="use-credentials"` attribute to `<link rel="manifest">`
+      useCredentials: false,
+
     })
   ],
   build: {
