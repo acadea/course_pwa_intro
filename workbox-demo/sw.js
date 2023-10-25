@@ -4,7 +4,29 @@ import {CacheFirst, CacheOnly, NetworkFirst, NetworkOnly, StaleWhileRevalidate} 
 import {ExpirationPlugin} from 'workbox-expiration';
 
 if(self.constructor.name === 'ServiceWorkerGlobalScope'){
-  main();
+  const noop = true;
+
+  if(noop){
+    self.addEventListener('install', () => {
+    
+      // Skip over the "waiting" lifecycle state, to ensure that our
+      // new service worker is activated immediately, even if there's
+      // another tab open controlled by our older service worker code.
+      self.skipWaiting();
+    });
+    
+    self.addEventListener('activate', () => {
+      self.clients.matchAll({
+        type: 'window'
+      }).then((windowClients) => {
+        windowClients.forEach((windowClient) => {
+          windowClient.navigate(windowClient.url);
+        })
+      })
+    });
+  }else{
+    main();
+  }
 
 }
 
@@ -41,14 +63,11 @@ async function main(){
         maxEntries: 50,
       })
     ]
-  }))
+  }));
 
 
-  // cache only
 
-  // network first
-  // network only
 
-  // stale while revalidate
+
 
 }
