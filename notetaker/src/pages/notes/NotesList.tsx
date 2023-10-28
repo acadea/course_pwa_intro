@@ -1,7 +1,10 @@
 import React from 'react'
+import AppLayout from '../../layouts/AppLayout'
 
 export default function NotesList() {
   return (
-    <div>NotesList</div>
+    <AppLayout>
+      <div>NotesList</div>
+    </AppLayout>
   )
 }

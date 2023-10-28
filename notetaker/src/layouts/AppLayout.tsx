@@ -1,6 +1,7 @@
 import { AppShell, Burger, Group } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import React, { PropsWithChildren } from 'react'
+import { Sidebar } from './Sidebar';
 
 export default function AppLayout({children} : PropsWithChildren) {
   const [opened, {toggle}] = useDisclosure();
@@ -16,9 +17,7 @@ export default function AppLayout({children} : PropsWithChildren) {
         </Group>
       </AppShell.Header>
       <AppShell.Navbar p="md">
-        
-        {/* TODO: sidebar */}
-
+        <Sidebar></Sidebar>
       </AppShell.Navbar>
       <AppShell.Main>
         <section >
