@@ -44,7 +44,7 @@ export function Sidebar() {
       <div className={classes.section}>
         <div className={classes.mainLinks}>
           {links.map((link) => (
-            <Link to={link.to} style={{marginLeft: '1rem', paddingLeft: 0, border:"none"}}>
+            <Link key={link.label} to={link.to} style={{marginLeft: '1rem', paddingLeft: 0, border:"none"}}>
               <UnstyledButton key={link.label} className={classes.mainLink}>
                 <div className={classes.mainLinkInner}>
                   <link.icon size={20} className={classes.mainLinkIcon} stroke={1.5} />
