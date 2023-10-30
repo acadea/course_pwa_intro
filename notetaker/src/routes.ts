@@ -20,6 +20,9 @@ const routes: RouteObject[] = [
   {
     path: '/notes/:noteId',
     element: React.createElement(SingleNote),
+    loader({params}){
+      return fetch('/api/notes/' + params.noteId).then(res => res.json());
+    }
   }
 ];
 
