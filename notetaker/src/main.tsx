@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { MantineProvider, createTheme } from '@mantine/core';
+import {registerSW} from 'virtual:pwa-register';
 import App from './App.tsx'
 import './index.css'
 // core styles are required for all packages
@@ -19,3 +20,25 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <App />
   </MantineProvider>,
 )
+
+
+window.addEventListener('load', function(){
+
+  if(!window.navigator.serviceWorker){
+    return;
+  }
+
+
+  registerSW({
+    onRegisterSW(){
+      console.log('on registered')
+    },
+    onOfflineReady(){
+      console.log('on offline ready')
+    },
+    onNeedRefresh(){
+      console.log('on need refresh');
+    }
+  })
+
+});
