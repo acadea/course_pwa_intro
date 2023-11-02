@@ -12,6 +12,10 @@ app.use(express.json());
 
 app.use(express.urlencoded({extended: true}));
 
+app.get('/api/ping', (req, res) => {
+  res.end();
+})
+
 // get notes
 app.get('/api/notes', (req, res) => {
   const client = usePrisma();
