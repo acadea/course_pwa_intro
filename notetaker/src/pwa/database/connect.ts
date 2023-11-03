@@ -12,6 +12,11 @@ export async function connect(){
       const store = db.createObjectStore('notes', {
         keyPath: 'id',
         autoIncrement: false,
+      });
+
+      db.createObjectStore('request_queues', {
+        keyPath: 'id',
+        autoIncrement: false,
       })
 
     }

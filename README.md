@@ -1,6 +1,6 @@
 ## Intro
 
-This is the source code for our course: [Introduction to PWA](https://www.acadea.io/learn/pwa-intro)
+This is the source code for our course: [Introduction to PWA](https://www.acadea.io/learn/offline-first-pwa)
 
 ## Support us
 

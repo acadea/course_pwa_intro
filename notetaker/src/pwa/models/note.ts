@@ -12,7 +12,9 @@ export const Note = {
   },
 
   async get(id: string){
-
+    const transaction = await this.transact();
+    const store = transaction.objectStore(this._tableName);
+    return store.get(id);
   },
 
   async getAll(){
@@ -58,7 +60,10 @@ export const Note = {
   },
 
   async delete(id: string){
-
+    const transaction = await this.transact();
+    const store = transaction.objectStore(this._tableName);
+    await store.delete(id);
+    await transaction.done;
   }
 
 

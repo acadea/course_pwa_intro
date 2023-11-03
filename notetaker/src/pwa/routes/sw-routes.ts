@@ -1,6 +1,23 @@
 import {registerRoute} from 'workbox-routing';
 import { isOnline } from '../services/network';
 import { Note } from '../models/note';
+import { useQueue } from '../services/request-queue';
+
+const requestQueue = useQueue();
+
+
+async function sendFetch(request: Request){
+
+  if (!await isOnline()) {
+    throw new Error('No internet!');
+  }
+  const res = await fetch(request.clone());
+  if (res.status === 500) {
+    throw new Error('Server error!');
+  }
+  return res;
+}
+
 
 registerRoute(
   // matcher
@@ -13,13 +30,7 @@ registerRoute(
     
     // attempt to relay request to api server
     try{
-      if(!await isOnline()){
-        throw new Error('No internet!');
-      }
-      const res = await fetch(request.clone());
-      if(res.status === 500){
-        throw new Error('Server error!');
-      }
+      const res = await sendFetch(request);
 
       // cache the response
       // if we get a success response from api server
@@ -43,13 +54,68 @@ registerRoute(
       const idbNotes = await Note.getAll();
 
       return new Response(JSON.stringify(idbNotes));
+    }
+  },
+  'GET'
+)
+
+
+registerRoute(
+  ({url}) => {
+    return url.pathname.match('/api/notes/*')
+  },
+  async ({request, url}) => {
+    const noteId = url.pathname.split('/').slice(-1)[0];
+    
+    try{
+      const res = await sendFetch(request);
+
+      try{
+        const response = await res.clone().json();
+        await Note.update(noteId, response);
+  
+      }catch(err){
+        console.log('errr', err);
+      }
+      return res;
+    }catch(err){
+      const note = await Note.get(noteId);
+      console.log({note});
+      return new Response(JSON.stringify(note));
+    }
+  },
+  'GET'
+)
+
+
+registerRoute(
+  ({url}) => url.pathname.match(/\/api\/notes$/g),
+  async ({request}) => {
+    try{
+      const res = await sendFetch(request);
+
+      const resBody = await res.clone().json();
+      try{
+        await Note.update(resBody.id, resBody);
+      }catch(err){
+        console.log('err', err);
+      }
+      return res;
+    }catch(err){
+      console.error(err);
+      // cloning because body can only be read once
+      const body = await request.clone().json();
+      const note = await Note.create(body);
+
+      // store in req queue
+      if(note._id){
+        await requestQueue.add(request.clone(), note._id);
+      }
+
+      return new Response(JSON.stringify(note));
 
     }
 
-
-
-
   },
-
-  'GET'
+  'POST'
 )
