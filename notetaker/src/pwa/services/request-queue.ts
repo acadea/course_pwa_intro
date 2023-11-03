@@ -28,6 +28,30 @@ export function useQueue(){
       await store.add(payload);
       await transaction.done;
       return payload;
+    },
+
+    async update(request: Request, resourceId: string){
+
+      const transaction = await transact();
+
+      const store = transaction.objectStore(_tableName);
+
+      store.getAll()
+        .then(requests => requests.find(
+          (req) => req.resourceId === resourceId && req.url === request.url && req.method === request.method)
+        )
+        .then(target => {
+          if(!target){
+            store.put({
+              id: v4(),
+              method: request.method,
+              url: request.url,
+              resourceId,
+            })
+          }
+        })
+      await transaction.done;
+      return true;
     }
 
   }

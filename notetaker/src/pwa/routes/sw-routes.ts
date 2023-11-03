@@ -119,3 +119,41 @@ registerRoute(
   },
   'POST'
 )
+
+
+registerRoute(
+  ({url}) => url.pathname.match(/^\/api\/notes\/[a-zA-Z\d\-]+$/g),
+  async ({request, url}) => {
+
+    const id = url.pathname.split('/').slice(-1)[0];
+    try{
+
+      const res = await sendFetch(request);
+      try{
+        await Note.update(id, await res.clone().json());
+      }catch(err){
+        console.error(err);
+      }
+
+      return res;
+
+    }catch(err){
+
+      const idbNote = await Note.get(id);
+      const isCreatedOffline = !!idbNote?._id;
+
+      const body = await request.clone().json();
+
+      const noteUpdated = await Note.update(id, {...idbNote, ...body});
+
+      if(!isCreatedOffline){
+        await requestQueue.update(request.clone(), id);
+      }
+
+      return new Response(JSON.stringify(noteUpdated));
+
+    }
+
+  },
+  'PATCH'
+)
