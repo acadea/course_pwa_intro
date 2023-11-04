@@ -157,3 +157,38 @@ registerRoute(
   },
   'PATCH'
 )
+
+registerRoute(
+  ({ url }) => url.pathname.match(/^\/api\/notes\/[a-zA-Z\d\-]+$/g),
+  async ({ request, url }) => {
+
+    const id = url.pathname.split('/').slice(-1)[0];
+    try {
+
+      const res = await sendFetch(request);
+      try {
+        await Note.delete(id);
+      } catch (err) {
+        console.error(err);
+      }
+
+      return res;
+    }catch(err){
+
+      const isCreatedOffline = !!(await Note.get(id))?._id;
+
+      await Note.delete(id);
+
+      // if offline note, remove references in queue
+      if(isCreatedOffline){
+        await requestQueue.removeByResourceId(id);
+      }else{
+        // if online note, log an new entry in queue
+        await requestQueue.add(request.clone(), id);
+      }
+      return new Response(JSON.stringify({data: 'ok'}));
+    }
+
+  },
+  "DELETE"
+)

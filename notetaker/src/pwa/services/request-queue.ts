@@ -52,6 +52,19 @@ export function useQueue(){
         })
       await transaction.done;
       return true;
+    },
+
+    async removeByResourceId(id: string){
+      const transaction = await transact();
+
+      const store = transaction.objectStore(_tableName);
+
+      store.getAll()
+        .then(requests => requests.filter(req => req.resourceId === id))
+        .then(filtered => filtered.forEach(req => store.delete(req.id)));
+
+      await transaction.done;
+      return true;
     }
 
   }
