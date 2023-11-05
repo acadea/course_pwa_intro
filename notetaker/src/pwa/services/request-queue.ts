@@ -1,5 +1,8 @@
 import { v4 } from "uuid";
 import { connect } from "../database/connect"
+import { isOnline } from "./network";
+import { groupBy, isEmpty, remove } from "lodash";
+import { Note } from "../models/note";
 
 export function useQueue(){
 
@@ -65,6 +68,103 @@ export function useQueue(){
 
       await transaction.done;
       return true;
+    },
+
+    async removeById(id: string){
+      const transaction = await transact();
+      const store = transaction.objectStore(_tableName);
+      store.delete(id)
+      await transaction.done;
+    },
+
+    async getAll(){
+      const transaction = await transact();
+      const store = transaction.objectStore(_tableName);
+      return store.getAll();
+    },
+
+    async sync(){
+
+      function createRequest(request: any, body: any = {}){
+        return new Request(request.url, {
+          body: JSON.stringify(body),
+          headers: {
+            accept: 'application/json',
+            'content-type': 'application/json'
+          },
+          method: request.method,
+        })
+      }
+
+      if(!await isOnline()){
+        console.log('sync failed app is not online');
+        return false;
+      }
+
+      // get all req and group them by method
+      const requests = await this.getAll();
+
+      const keyedRequests = groupBy(requests, (req) => req.method);
+
+      for (const method of ['DELETE', 'POST', 'PATCH']) {
+        if(isEmpty(keyedRequests[method])){
+          keyedRequests[method] = [];
+        }
+      }
+
+      // DELETE, PATCH, POST
+      // DELETE
+      // only for online note
+      // once delete, clear out all related PATCH in idb
+      for (const request of keyedRequests['DELETE']) {
+        const deleteHttp = createRequest(request);
+
+        await fetch(deleteHttp);
+
+        remove(keyedRequests['PATCH'], (req) => req.resourceId === request.resourceId);
+
+
+        await Note.delete(request.resourceId);
+
+        // remove from queue
+        await this.removeById(request.id);
+
+      }
+
+      // POST
+      // only for offline note,
+      for (const request of keyedRequests['POST']) {
+        
+        const model = await Note.get(request.resourceId);
+        const postHttp = createRequest(request, model);
+
+        const response = await fetch(postHttp).then(res => res.json());
+
+        // remove model in idb, id is no longer the temp uuid
+        await Note.delete(model.id);
+        // await Note.create({
+        //   ...response,
+        //   id: String(response.id),
+        // });
+
+        await this.removeById(request.id);
+      }
+      // PATCH
+      // for offline -- need to be after all POST requests [not applicable]
+
+      // for online -- can be anytime
+      for (const request of keyedRequests['PATCH']) {
+        const model = await Note.get(request.resourceId);
+        cl
+        const patchHttp = createRequest(request, model);
+
+        const response = await fetch(patchHttp);
+
+        await this.removeById(request.id);
+      }
+
+
+
     }
 
   }

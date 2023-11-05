@@ -54,7 +54,7 @@ export const Note = {
     const store = transaction.objectStore(this._tableName);
     store.put({
       ...payload,
-      id,
+      id: String(id),
     })
 
   },

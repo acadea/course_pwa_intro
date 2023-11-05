@@ -2,21 +2,14 @@
 import { RouterProvider } from 'react-router-dom'
 import { router } from './routes'
 import { useEffect } from 'react'
+import { useQueue } from './pwa/services/request-queue';
 
 function App() {
 
   useEffect(() => {
-    // send GET to /api/notes
-    fetch('/api/notes', {
-      headers: {
-        accept: 'application/json',
-        'content-type': 'application/json'
-      }
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log('res is', res);
-      })
+    const requestQueue = useQueue();
+
+    requestQueue.sync();
 
 
   }, []);

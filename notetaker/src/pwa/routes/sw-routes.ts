@@ -96,7 +96,7 @@ registerRoute(
 
       const resBody = await res.clone().json();
       try{
-        await Note.update(resBody.id, resBody);
+        await Note.update(String(resBody.id), resBody);
       }catch(err){
         console.log('err', err);
       }
