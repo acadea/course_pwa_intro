@@ -128,7 +128,6 @@ export function useQueue(){
 
         // remove from queue
         await this.removeById(request.id);
-
       }
 
       // POST
@@ -155,7 +154,6 @@ export function useQueue(){
       // for online -- can be anytime
       for (const request of keyedRequests['PATCH']) {
         const model = await Note.get(request.resourceId);
-        cl
         const patchHttp = createRequest(request, model);
 
         const response = await fetch(patchHttp);
@@ -163,7 +161,10 @@ export function useQueue(){
         await this.removeById(request.id);
       }
 
+      // TODO: clear out request queue table  -- if there are orphaned records
 
+
+      return true;
 
     }
 

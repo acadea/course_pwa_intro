@@ -11,6 +11,7 @@ export default function NotesList() {
   const navigate = useNavigate();
 
   function getNotes(){
+    console.log('getting notes');
     return fetch('/api/notes', {
       headers: {
         'accept': 'application/json'

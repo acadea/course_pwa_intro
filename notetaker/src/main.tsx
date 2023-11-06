@@ -6,6 +6,7 @@ import App from './App.tsx'
 import './index.css'
 // core styles are required for all packages
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css'
 
 // other css files are required only if
 // you are using components from the corresponding package
@@ -14,9 +15,11 @@ import '@mantine/core/styles.css';
 // import '@mantine/code-highlight/styles.css';
 // ...
 import '@mantine/tiptap/styles.css';
+import { Notifications } from '@mantine/notifications';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <MantineProvider>
+    <Notifications/>
     <App />
   </MantineProvider>,
 )
