@@ -83,6 +83,12 @@ export function useQueue(){
       return store.getAll();
     },
 
+    async clear(){
+      const transaction = await transact();
+      const store = transaction.objectStore(_tableName);
+      return store.clear();
+    },
+
     async sync(){
 
       function createRequest(request: any, body: any = {}){
@@ -161,8 +167,8 @@ export function useQueue(){
         await this.removeById(request.id);
       }
 
-      // TODO: clear out request queue table  -- if there are orphaned records
-
+      //  clear out request queue table  -- if there are orphaned records
+      await this.clear();
 
       return true;
 

@@ -12,5 +12,14 @@ precacheAndRoute(self.__WB_MANIFEST || []);
   //   title: '123'
   // });
   // console.log('note created', note);
+  console.log('new sww!!')
 
 })()
+
+self.addEventListener('message', messageEvent => {
+
+  if(messageEvent.data === 'skipWaiting'){
+    return self.skipWaiting();
+  }
+
+})
